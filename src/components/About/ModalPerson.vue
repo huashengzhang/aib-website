@@ -39,9 +39,12 @@
 </template>
 
 <script>
-import disableScroll from 'disable-scroll'
 import CardPerson from './CardPerson'
 import { portrait } from '../../scripts/cdn.js'
+let disableScroll
+if (process.env.VUE_ENV === 'client') {
+  disableScroll = require('disable-scroll')
+}
 export default {
   name: 'section-people',
   components: {

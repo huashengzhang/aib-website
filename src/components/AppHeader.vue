@@ -14,17 +14,15 @@ header.app-header
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import disableScroll from 'disable-scroll'
 
+let disableScroll
+if (process.env.VUE_ENV === 'client') {
+  disableScroll = require('disable-scroll')
+}
 export default {
   name: 'app-header',
-  computed: {
-    ...mapGetters(['config'])
-  },
   data: () => ({
     activeMenuApp: false,
-
     desktop: false
   }),
   methods: {

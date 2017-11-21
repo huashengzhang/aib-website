@@ -1,3 +1,4 @@
+<script src="../../../../../Desktop/src/router/index.js"></script>
 <template>
   <div class="page-index">
     <section-cover></section-cover>

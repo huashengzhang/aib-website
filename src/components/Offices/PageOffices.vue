@@ -6,28 +6,31 @@
       type="split"
       slot="header">
     </page-header>
-    <card-office :offices="allOffices">
+    <card-office :offices="$store.state.allOffices">
     </card-office>
   </page-split>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+
   import CardOffice from './CardOffice'
   import NiSection from '../NiSection'
-  import PageHeader from '@nylira/vue-page-header'
-  import PageSplit from '@nylira/vue-page-split'
-
+  let PageHeader
+  let PageSplit
+  if (process.env.VUE_ENV === 'client') {
+    PageHeader = require('@nylira/vue-page-header')
+    PageSplit = require('@nylira/vue-page-split')
+  }
   export default {
     name: 'PageOffices',
+    asyncData ({ store }) {
+      return store.dispatch('getAllOffices')
+    },
     components: {
       NiSection,
       PageHeader,
       PageSplit,
       CardOffice
-    },
-    computed: {
-      ...mapGetters(['allOffices'])
     },
     data () {
       return {

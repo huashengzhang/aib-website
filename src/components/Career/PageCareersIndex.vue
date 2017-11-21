@@ -23,14 +23,21 @@
 
 <script>
 
-import { mapGetters } from 'vuex'
 import { union, orderBy } from 'lodash'
 import CardCareer from './CardCareer'
 import NiSection from '../NiSection'
-import PageHeader from '@nylira/vue-page-header'
-import PageSplit from '@nylira/vue-page-split'
+let PageHeader
+let PageSplit
+if (process.env.VUE_ENV === 'client') {
+  PageHeader = require('@nylira/vue-page-header')
+  PageSplit = require('@nylira/vue-page-split')
+}
+
 export default {
   name: 'page-careers-index',
+  asyncData ({ store }) {
+    return store.dispatch('getAllCareers')
+  },
   components: {
     CardCareer,
     NiSection,
@@ -55,7 +62,7 @@ export default {
       return this.careers.filter(c => c.area === 'community' && c.weight !== 0)
     },
     careers () {
-      let orderedCareers = orderBy(this.allCareers, ['title'], ['asc'])
+      let orderedCareers = orderBy(this.$store.state.allCareers, ['title'], ['asc'])
       return orderedCareers
 
       /*
@@ -67,8 +74,7 @@ export default {
         return orderedCareers.filter(career => career.tags.includes(activeTag))
       }
       */
-    },
-    ...mapGetters(['allCareers'])
+    }
   },
   data () {
     return {

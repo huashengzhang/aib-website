@@ -20,21 +20,26 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+
 import CardPerson from './CardPerson'
 import NiSection from '../NiSection'
-import PageHeader from '@nylira/vue-page-header'
-import PageSplit from '@nylira/vue-page-split'
+let PageHeader
+let PageSplit
+if (process.env.VUE_ENV === 'client') {
+  PageHeader = require('@nylira/vue-page-header')
+  PageSplit = require('@nylira/vue-page-split')
+}
+
 export default {
   name: 'page-about',
+  asyncData ({ store }) {
+    return store.dispatch('getAllPeople')
+  },
   components: {
     CardPerson,
     NiSection,
     PageSplit,
     PageHeader
-  },
-  computed: {
-    ...mapGetters(['allPeople'])
   },
   data () {
     return {
@@ -63,7 +68,9 @@ export default {
     }
   },
   methods: {
-    ppl (tag) { return this.allPeople.filter(p => p.groups[tag]) }
+    ppl (tag) {
+      return this.$store.state.peopleList==''?[]:this.$store.state.peopleList.filter(p => p.groups[tag])
+    }
   }
 }
 </script>

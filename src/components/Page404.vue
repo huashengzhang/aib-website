@@ -20,9 +20,15 @@
 </template>
 
 <script>
-import PageSplit from '@nylira/vue-page-split'
-import PageHeader from '@nylira/vue-page-header'
-import ArticleBody from '@nylira/vue-article-body'
+let PageHeader
+let PageSplit
+let ArticleBody
+if (process.env.VUE_ENV === 'client') {
+  PageHeader = require('@nylira/vue-page-header')
+  PageSplit = require('@nylira/vue-page-split')
+  ArticleBody = require('@nylira/vue-article-body')
+}
+
 export default {
   name: 'page-404',
   components: {

@@ -41,14 +41,23 @@
 </template>
 
 <script>
-import PageHeader from '@nylira/vue-page-header'
-import ArticleBody from '@nylira/vue-article-body'
-import { mapGetters } from 'vuex'
+
 import MarkdownIt from 'markdown-it'
-import Btn from '@nylira/vue-button'
+
 let md = new MarkdownIt()
+let PageHeader
+let Btn
+let ArticleBody
+if (process.env.VUE_ENV === 'client') {
+  PageHeader = require('@nylira/vue-page-header')
+  ArticleBody = require('@nylira/vue-article-body')
+  Btn = require('@nylira/vue-button')
+}
 export default {
   name: 'page-career-entry',
+  asyncData ({ store }) {
+    return store.dispatch('getAllCareers')
+  },
   components: {
     Btn,
     PageHeader,
@@ -59,15 +68,14 @@ export default {
       return this.capitalize(this.career.area) + ' Position at Tendermint'
     },
     career () {
-      if (this.allCareers) {
-        return this.allCareers.find(c => c.id === this.$route.params.entry)
+      if (this.$store.state.allCareers) {
+        return this.$store.state.allCareers.find(c => c.id === this.$route.params.entry)
       }
       return {
         title: 'Loading...',
         subtitle: 'Loading...'
       }
-    },
-    ...mapGetters(['allCareers'])
+    }
   },
   methods: {
     capitalize (string) {
